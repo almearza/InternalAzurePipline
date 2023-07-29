@@ -20,7 +20,7 @@ steps:
     packageType: 'sdk'
     #useGlobalJson: false # boolean. Optional. Use when packageType = sdk. Use global json. Default: false.
     #workingDirectory: # string. Optional. Use when useGlobalJson = true. Working Directory. 
-    version:'6.x'
+    version: '6.x'
     #includePreviewVersions: false # boolean. Optional. Use when useGlobalJson = false  || packageType = runtime. Include Preview Versions. Default: false.
   # Advanced
     #vsVersion: # string. Compatible Visual Studio version. 
