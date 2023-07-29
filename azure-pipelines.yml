@@ -5,31 +5,39 @@
 
 trigger:
 - master
+
 pool:
-name: Default
+  name: Default
 
 variables:
-solution: '**/*.sln'
-buildPlatform: 'Any CPU'
-buildConfiguration: 'Release'
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
 
 steps:
 - task: UseDotNet@2
-inputs:
-packageType: 'sdk'
-version: '6.x'
+  inputs:
+    packageType: 'sdk'
+    #useGlobalJson: false # boolean. Optional. Use when packageType = sdk. Use global json. Default: false.
+    #workingDirectory: # string. Optional. Use when useGlobalJson = true. Working Directory. 
+    version:'6.x'
+    #includePreviewVersions: false # boolean. Optional. Use when useGlobalJson = false  || packageType = runtime. Include Preview Versions. Default: false.
+  # Advanced
+    #vsVersion: # string. Compatible Visual Studio version. 
+    #installationPath: '$(Agent.ToolsDirectory)/dotnet' # string. Path To Install .Net Core. Default: $(Agent.ToolsDirectory)/dotnet.
+    #performMultiLevelLookup: false # boolean. Perform Multi Level Lookup. Default: false.
+
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
-inputs:
-restoreSolution: '$(solution)'
-
+  inputs:
+    restoreSolution: '$(solution)'
 - task: DotNetCoreCLI@2
-displayName: Build
-inputs:
-command: build
-projects: '**/*.csproj'
-arguments: '--configuration $(buildConfiguration)'
+  inputs:
+    command: 'build'
+    projects: '**/*.csproj'
+    arguments:  '--configuration $(buildConfiguration)'
+
 # - task: VSTest@2
 #   inputs:
 #     platform: '$(buildPlatform)'
