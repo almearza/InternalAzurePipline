@@ -5,32 +5,31 @@
 
 trigger:
 - master
-
 pool:
-  name: Default
+name: Default
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+solution: '**/*.sln'
+buildPlatform: 'Any CPU'
+buildConfiguration: 'Release'
 
 steps:
 - task: UseDotNet@2
 inputs:
 packageType: 'sdk'
 version: '6.x'
-
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'build'
-    projects: '**/*.csproj'
-    arguments:  '--configuration $(buildConfiguration)'
+inputs:
+restoreSolution: '$(solution)'
 
+- task: DotNetCoreCLI@2
+displayName: Build
+inputs:
+command: build
+projects: '**/*.csproj'
+arguments: '--configuration $(buildConfiguration)'
 # - task: VSTest@2
 #   inputs:
 #     platform: '$(buildPlatform)'
