@@ -30,7 +30,7 @@ trigger:
 - master
 
 pool:
-  name: Default
+  vmImage: 'windows-latest'
 
 variables:
   solution: '**/*.sln'
@@ -52,12 +52,18 @@ steps:
     command: 'build'
     projects: '**/*.csproj'
     arguments:  '--configuration $(buildConfiguration)'
-- task: DotNetCoreCLI@2
+    
+- task: WhiteSource@21
   inputs:
-    command: publish
-    publishWebProjects: True
-    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    zipAfterPublish: false
+    cwd: '$(System.DefaultWorkingDirectory)'
+    projectName: 'webApp'
+# - task: DotNetCoreCLI@2
+#   inputs:
+#     command: publish
+#     publishWebProjects: True
+#     arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+#     zipAfterPublish: false
+
 # - task: MSBuild@1
 #   inputs:
 #     solution: '**/*.sln'
