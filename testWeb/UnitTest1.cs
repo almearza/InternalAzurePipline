@@ -1,3 +1,4 @@
+using webApp.Modules;
 using Xunit;
 
 namespace testWeb
@@ -11,6 +12,15 @@ namespace testWeb
             var result = false;
             if (i == 1) result = true;
             Assert.True(result, "value should be equal to one ");
+        }
+        [Fact]
+        public void TestAddFunc()
+        {
+            var func = new Functions();
+            var testResult = false;
+            var result = func.Sum(2,3);
+            if (result == 5) testResult = true;
+            Assert.True(testResult, "value should be equal to one ");
         }
     }
 }
