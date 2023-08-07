@@ -42,11 +42,11 @@ steps:
 #     packageType: 'sdk'
 #     version: '6.x'
 
-- task: NuGetToolInstaller@1
+# - task: NuGetToolInstaller@1
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
+# - task: NuGetCommand@2
+#   inputs:
+#     restoreSolution: '$(solution)'
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
@@ -57,7 +57,7 @@ steps:
     command: 'test'
     projects: '**/webTest.csproj'
     arguments: '--configuration $(buildConfiguration)'
-    testRunTitle: 'Test App'
+
 # - task: WhiteSource@21
 #   inputs:
 #     cwd: '$(System.DefaultWorkingDirectory)'
