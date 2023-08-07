@@ -42,21 +42,26 @@ steps:
 #     packageType: 'sdk'
 #     version: '6.x'
 
-- task: NuGetToolInstaller@1
+# - task: NuGetToolInstaller@1
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
+# - task: NuGetCommand@2
+#   inputs:
+#     restoreSolution: '$(solution)'
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
     projects: '**/*.csproj'
     arguments:  '--configuration $(buildConfiguration)'
-    
-- task: WhiteSource@21
+- task: DotNetCoreCLI@2
   inputs:
-    cwd: '$(System.DefaultWorkingDirectory)'
-    projectName: 'webApp'
+    command: 'test'
+    projects: '**/webTest.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+
+# - task: WhiteSource@21
+#   inputs:
+#     cwd: '$(System.DefaultWorkingDirectory)'
+#     projectName: 'webApp'
 # - task: DotNetCoreCLI@2
 #   inputs:
 #     command: publish
