@@ -52,11 +52,16 @@ steps:
     command: 'build'
     projects: '**/*.csproj'
     arguments:  '--configuration $(buildConfiguration)'
-    
-- task: WhiteSource@21
+- task: DotNetCoreCLI@2
   inputs:
-    cwd: '$(System.DefaultWorkingDirectory)'
-    projectName: 'webApp'
+    command: 'test'
+    projects: '**/webTest.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+    testRunTitle: 'Test App'
+# - task: WhiteSource@21
+#   inputs:
+#     cwd: '$(System.DefaultWorkingDirectory)'
+#     projectName: 'webApp'
 # - task: DotNetCoreCLI@2
 #   inputs:
 #     command: publish
