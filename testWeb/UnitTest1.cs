@@ -18,7 +18,7 @@ namespace testWeb
         {
             var func = new Functions();
             var testResult = false;
-            var result = func.Sum(4,3);
+            var result = func.Sumation(4,3);
             if (result == 7) testResult = true;
             Assert.True(testResult, "value should be equal to one ");
         }
