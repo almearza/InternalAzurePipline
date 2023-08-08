@@ -54,10 +54,19 @@ steps:
     arguments:  '--configuration $(buildConfiguration)'
 - task: DotNetCoreCLI@2
   inputs:
+    command: 'restore'
+    projects: '**/*.csproj'
+- task: DotNetCoreCLI@2
+  inputs:
     command: 'test'
-    projects: '**/webTest.csproj'
-    arguments: '--configuration $(buildConfiguration)'
-
+    projects: '**/testWeb.csproj'
+    arguments: '/p:CollectCoverage=true /p:CoverletOutputFormat:Cobertura /p:CoverletOutput:./MyCoverage/'
+    publishTestResults: true
+- task: PublishCodeCoverageResults@1
+  displayName: 'code coverage'
+  inputs:
+    codeCoverageTool: Cobertura
+    summaryFileLocation: '$(build.SourceDirectory)/**/MyCoverage/coverage.cobertura.xml'
 # - task: WhiteSource@21
 #   inputs:
 #     cwd: '$(System.DefaultWorkingDirectory)'
