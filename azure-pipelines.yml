@@ -65,7 +65,7 @@ steps:
   displayName: 'code coverage'
   inputs:
     codeCoverageTool: Cobertura
-    summaryFileLocation: '$(build.SourceDirectory)/**/MyCoverage/coverage.cobertura.xml'
+    summaryFileLocation: '$(Build.SourceDirectory)/**/MyCoverage/coverage.cobertura.xml'
 # - task: WhiteSource@21
 #   inputs:
 #     cwd: '$(System.DefaultWorkingDirectory)'
