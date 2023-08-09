@@ -25,6 +25,23 @@
 #     command: 'build'
 #     projects: '**/*.csproj'
 #     arguments:  '--configuration $(buildConfiguration)'
+# - task: DotNetCoreCLI@2
+#   displayName: 'restore task' 
+#   inputs:
+#     command: restore
+#     projects: '**/testWeb.csproj'
+# - task: DotNetCoreCLI@2
+#   displayName: 'test task'
+#   inputs:
+#     command: 'test'
+#     projects: '**/testWeb.csproj'
+#     arguments: '/p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./MyCoverage/'
+#     publishTestResults: true
+# - task: PublishCodeCoverageResults@1
+#   displayName: 'code coverage'
+#   inputs:
+#     codeCoverageTool: Cobertura
+#     summaryFileLocation: '$(Build.SourceDirectory)/**/MyCoverage/coverage.cobertura.xml'
 
 trigger:
 - master
@@ -55,23 +72,23 @@ steps:
     command: 'build'
     projects: '**/*.csproj'
     arguments:  '--configuration $(buildConfiguration)'
-- task: DotNetCoreCLI@2
-  displayName: 'restore task' 
+
+- task: SonarCloudPrepare@1
   inputs:
-    command: restore
-    projects: '**/testWeb.csproj'
-- task: DotNetCoreCLI@2
-  displayName: 'test task'
+    SonarCloud: 'Sonar Connection'
+    organization: 'scorg'
+    scannerMode: 'MSBuild'
+    projectKey: 'scorg_sc-project'
+    projectName: 'Sonar Prj'
+
+- task: SonarCloudAnalyze@1
   inputs:
-    command: 'test'
-    projects: '**/testWeb.csproj'
-    arguments: '/p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./MyCoverage/'
-    publishTestResults: true
-- task: PublishCodeCoverageResults@1
-  displayName: 'code coverage'
+    jdkversion: 'JAVA_HOME_17_X64'
+
+- task: SonarCloudPublish@1
   inputs:
-    codeCoverageTool: Cobertura
-    summaryFileLocation: '$(Build.SourceDirectory)/**/MyCoverage/coverage.cobertura.xml'
+    pollingTimeoutSec: '300'
+
 # - task: WhiteSource@21
 #   inputs:
 #     cwd: '$(System.DefaultWorkingDirectory)'
