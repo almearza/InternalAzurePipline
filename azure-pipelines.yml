@@ -43,8 +43,10 @@ steps:
     version: '6.x'
 
 - task: NuGetToolInstaller@1
+  displayName: 'nuget instllation task'
 
 - task: NuGetCommand@2
+  displayName: 'restoreSolution task'
   inputs:
     restoreSolution: '$(solution)'
 - task: DotNetCoreCLI@2
