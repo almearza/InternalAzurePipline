@@ -53,7 +53,11 @@ steps:
     command: 'build'
     projects: '**/*.csproj'
     arguments:  '--configuration $(buildConfiguration)'
-    
+- task: DotNetCoreCLI@2
+  displayName: 'restore task' 
+  inputs:
+    command: restore
+    projects: '**/testWeb.csproj'
 - task: DotNetCoreCLI@2
   displayName: 'test task'
   inputs:
