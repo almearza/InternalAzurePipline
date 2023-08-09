@@ -20,7 +20,7 @@ namespace testWeb
             var testResult = false;
             var result = func.Sumation(4,3);
             if (result == 7) testResult = true;
-            Assert.True(testResult, "value should be equal to one ");
+            Assert.True(testResult, "value should be equal to 7 ");
         }
     }
 }
