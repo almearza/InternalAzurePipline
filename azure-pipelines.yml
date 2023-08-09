@@ -54,25 +54,13 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 steps:
-- task: UseDotNet@2
-  inputs:
-    packageType: 'sdk'
-    version: '6.x'
 
-- task: NuGetToolInstaller@1
-  displayName: 'nuget instllation task'
-
-- task: NuGetCommand@2
-  displayName: 'restoreSolution task'
+- task: VSBuild@1
   inputs:
-    restoreSolution: '$(solution)'
-- task: DotNetCoreCLI@2
-  displayName: 'build task'
-  inputs:
-    command: 'build'
-    projects: '**/*.csproj'
-    arguments:  '--configuration $(buildConfiguration)'
-
+    solution: '$(solution)'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
 - task: SonarCloudPrepare@1
   inputs:
     SonarCloud: 'Sonar Connection'
@@ -107,9 +95,3 @@ steps:
 #     configuration: '$(buildConfiguration)'
 #     msbuildArguments: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
 
-# - task: VSBuild@1
-#   inputs:
-#     solution: '$(solution)'
-#     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-#     platform: '$(buildPlatform)'
-#     configuration: '$(buildConfiguration)'
