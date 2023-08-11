@@ -25,6 +25,23 @@
 #     command: 'build'
 #     projects: '**/*.csproj'
 #     arguments:  '--configuration $(buildConfiguration)'
+# - task: DotNetCoreCLI@2
+#   displayName: 'restore task' 
+#   inputs:
+#     command: restore
+#     projects: '**/testWeb.csproj'
+# - task: DotNetCoreCLI@2
+#   displayName: 'test task'
+#   inputs:
+#     command: 'test'
+#     projects: '**/testWeb.csproj'
+#     arguments: '/p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./MyCoverage/'
+#     publishTestResults: true
+# - task: PublishCodeCoverageResults@1
+#   displayName: 'code coverage'
+#   inputs:
+#     codeCoverageTool: Cobertura
+#     summaryFileLocation: '$(Build.SourceDirectory)/**/MyCoverage/coverage.cobertura.xml'
 
 trigger:
 - master
@@ -37,35 +54,43 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 steps:
-- task: UseDotNet@2
-  inputs:
-    packageType: 'sdk'
-    version: '6.x'
 
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
-- task: DotNetCoreCLI@2
-  displayName: 'build task'
+
+- task: SonarCloudPrepare@1
   inputs:
-    command: 'build'
-    projects: '**/*.csproj'
-    arguments:  '--configuration $(buildConfiguration)'
-    
-- task: DotNetCoreCLI@2
-  displayName: 'test task'
+    SonarCloud: 'SonarConnection'
+    organization: 'scorg'
+    scannerMode: 'MSBuild'
+    projectKey: 'scorg_sc-project'
+    projectName: 'SonarTest'
+- task: MSBuild@1
   inputs:
-    command: 'test'
-    projects: '**/testWeb.csproj'
-    arguments: '/p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./MyCoverage/'
-    publishTestResults: true
-- task: PublishCodeCoverageResults@1
-  displayName: 'code coverage'
+    solution: '**/*.sln'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+    msbuildArguments: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+    msbuildVersion: 'latest'
+# - task: VSBuild@1
+#   inputs:
+#     solution: '$(solution)'
+#     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+#     platform: '$(buildPlatform)'
+#     configuration: '$(buildConfiguration)'
+
+
+
+- task: SonarCloudAnalyze@1
   inputs:
-    codeCoverageTool: Cobertura
-    summaryFileLocation: '$(Build.SourceDirectory)/**/MyCoverage/coverage.cobertura.xml'
+    jdkversion: 'JAVA_HOME_17_X64'
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '300'
+
 # - task: WhiteSource@21
 #   inputs:
 #     cwd: '$(System.DefaultWorkingDirectory)'
@@ -84,9 +109,3 @@ steps:
 #     configuration: '$(buildConfiguration)'
 #     msbuildArguments: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
 
-# - task: VSBuild@1
-#   inputs:
-#     solution: '$(solution)'
-#     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-#     platform: '$(buildPlatform)'
-#     configuration: '$(buildConfiguration)'
